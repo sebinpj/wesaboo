@@ -15,7 +15,7 @@ module.exports = {
     },
     plugins: [
         new webpack.ProvidePlugin({
-            join: ['lodash', 'join']
+            $: 'jquery'
         }),
         new MiniCssExtractPlugin({
             filename: "css/style.css"

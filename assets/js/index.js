@@ -1,11 +1,8 @@
 
-import $ from 'jquery';
-
 function component() {
     let element = document.createElement('div');
     let array = [1,2,3].map((e) => e ** 2)
-    element.innerHTML = join(array, ' ');
-
+    element.innerHTML = array.join(' ');
     return element;
 }
 
