@@ -46,6 +46,14 @@ module.exports = {
   },
   module: {
     rules: [{
+      type: 'javascript/auto',
+      test: /\.(json|html)/,
+      exclude: /(node_modules|bower_components)/,
+      use: [{
+        loader: 'file-loader',
+        options: {name: '[name].[ext]'},
+      }]
+    }, {
       test: /\.scss$/,
       use: [
         MiniCssExtractPlugin.loader,

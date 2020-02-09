@@ -11,7 +11,7 @@ function getRandomColor() {
 }
 
 
-d3.json('data/buildings.json').then((data) => {
+d3.json(require('../data/buildings.json')).then((data) => {
   const svg = d3.select("#canvas").append("svg")
     .attr("width", 400)
     .attr("height", 600);
