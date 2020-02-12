@@ -22,7 +22,7 @@ const onClick = (d) => {
       `)
     .style("left", (d3.event.pageX) + "px")
     .style("top", (d3.event.pageY - 28) + "px")
-    .style('transform', 'translate(-41%,-55%)');
+    .style('transform', 'translate(-47%,-90%)');
   d3.event.stopPropagation();
 };
 
