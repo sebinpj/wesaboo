@@ -1,5 +1,79 @@
 @import "~bootstrap/dist/css/bootstrap";
-.test-div{
-    background-color: blue;
-    color:black;
+
+.test-div {
+  background-color: blue;
+  color: black;
 }
+
+#calorie-graph {
+  width: 100%;
+}
+
+.y-axis path {
+  stroke: #ffffff;
+}
+
+.y-axis line {
+  stroke: #ffffff;
+}
+
+
+// tooltip
+
+$br: 8px;
+
+body {
+  background-color: #e6a200;
+}
+
+.set {
+  margin-top: 300px
+}
+
+
+.tooltips {
+  display: inline;
+  position: absolute;
+  width: fit-content;
+  color: #FFFFFF;
+  background: #e6a200;
+  height: fit-content;
+  line-height: 34px;
+  text-align: center;
+  visibility: visible;
+  border-radius: $br;
+  box-shadow: 1px 1px 9px #8e868c;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #ffffff;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    transform: translateX(-50%);
+  }
+
+  &:before {
+    transform: translateX(-50%);
+  }
+
+  .day {
+    --size: 20px;
+    padding-left: var(--size);
+    padding-right: var(--size);
+  }
+
+  .value {
+    background-color: #ffff;
+    color: black;
+    border-radius: 0px 0 $br $br;
+  }
+
+}
+
+
