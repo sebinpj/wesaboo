@@ -72,7 +72,7 @@ d3.json(require('../data/buildings')).then(function (data) {
 
   const xAxisCall = d3.axisBottom(x);
   g.append('g')
-    .attr('class', 'x-axis')
+    .attr('class', 'x-axis remove-axis')
     .attr('transform', `translate(0,${height})`)
     .call(xAxisCall)
     .selectAll('text')
@@ -92,7 +92,7 @@ d3.json(require('../data/buildings')).then(function (data) {
     });
 
   g.append('g')
-    .attr('class', 'y-axis')
+    .attr('class', 'y-axis remove-axis')
     .call(yAxisCall);
 
 

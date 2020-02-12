@@ -9,12 +9,16 @@
   width: 100%;
 }
 
-.y-axis path {
-  stroke: #ffffff;
+// removing line from axis
+
+$--stroke-color: #e6a200;
+
+.remove-axis path {
+  stroke: $--stroke-color;
 }
 
-.y-axis line {
-  stroke: #ffffff;
+.remove-axis line {
+  stroke: $--stroke-color;
 }
 
 
@@ -24,10 +28,6 @@ $br: 8px;
 
 body {
   background-color: #e6a200;
-}
-
-.set {
-  margin-top: 300px
 }
 
 
