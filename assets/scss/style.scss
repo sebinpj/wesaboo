@@ -6,7 +6,8 @@
 }
 
 #calorie-graph {
-  width: 100%;
+  width: 75%;
+  height: 100%;
 }
 
 // removing line from axis
@@ -24,7 +25,7 @@ $--stroke-color: #e6a200;
 
 // tooltip
 
-$br: 8px;
+$br: 18px;
 
 body {
   background-color: #e6a200;
@@ -43,7 +44,7 @@ body {
   visibility: visible;
   border-radius: $br;
   box-shadow: 1px 1px 9px #8e868c;
-
+  font-size: 30px;
   &:after {
     content: '';
     position: absolute;
@@ -52,9 +53,9 @@ body {
     margin-left: -8px;
     width: 0;
     height: 0;
-    border-top: 8px solid #ffffff;
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
+    border-top: 15px solid #ffffff;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
     transform: translateX(-50%);
   }
 
@@ -63,12 +64,17 @@ body {
   }
 
   .day {
-    --size: 20px;
-    padding-left: var(--size);
-    padding-right: var(--size);
+    --size: 68px;
+    --size-v: 22px;
+    font-size: 31px;
+    padding: var(--size-v) var(--size);
   }
 
   .value {
+    --size: 68px;
+    --size-v: 22px;
+    padding: var(--size-v) var(--size);
+    font-size: 31px;
     background-color: #ffff;
     color: black;
     border-radius: 0px 0 $br $br;
