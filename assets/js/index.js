@@ -33,9 +33,12 @@ const onClick = (d) => {
     .style("left", (d3.event.pageX) + "px")
     .style("top", (d3.event.pageY - 28) + "px")
     .style('transform', 'translate(-47%,-90%)');
+  if (dashedLine) {
+    d3.select('.dashed').remove();
+  }
   dashedLine = calorieSVGGroup.append('line')
-    .attr('class','dashed')
-    .attr('x1', x(d.key) +5)
+    .attr('class', 'dashed')
+    .attr('x1', x(d.key) + 5)
     .attr('y1', y(d3.max(data, (d) => d.value)))
     .attr('x2', x(d.key) + 5)
     .attr('y2', yAxis(d.value))
@@ -44,7 +47,7 @@ const onClick = (d) => {
 
 d3.select('body')
   .on('click', () => {
-    if(dashedLine){
+    if (dashedLine) {
       d3.select('.dashed').remove();
     }
     div.transition()
@@ -183,10 +186,10 @@ calorieSVGGroup.append("path")
   .attr("d", line) // 11. Calls the line generator
   .attr('filter', 'url(#drop-shadow');
 
-const returnLastPoint =()=> {
-  const lastEl = data[data.length -1];
+const returnLastPoint = () => {
+  const lastEl = data[data.length - 1];
   const maxY = yAxis(lastEl.value);
-  let maxX = x(lastEl.key) +5;
+  let maxX = x(lastEl.key) + 5;
   return {
     maxX,
     maxY
@@ -194,13 +197,12 @@ const returnLastPoint =()=> {
 };
 
 calorieSVGGroup.append('circle')
-  .attr('stroke','white')
-  .attr('stroke-width',4)
-  .attr('fill','transparent')
-  .attr('r',4)
-  .attr('cx',returnLastPoint().maxX)
-  .attr('cy',returnLastPoint().maxY);
-
+  .attr('stroke', 'white')
+  .attr('stroke-width', 4)
+  .attr('fill', 'transparent')
+  .attr('r', 4)
+  .attr('cx', returnLastPoint().maxX)
+  .attr('cy', returnLastPoint().maxY);
 
 
 // tooltip enabling
@@ -215,8 +217,4 @@ calorieSVGGroup.selectAll('rect')
   .attr('opacity', 0)
   .on('click', onClick);
 
-
-/**
- * Remove bar chart group
- */
 
