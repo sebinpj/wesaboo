@@ -9,11 +9,21 @@ const div = d3.select("body").append("div")
   .attr("class", "tooltips")
   .style("opacity", 0);
 
+const credit = false;
+const returnStringOf = (d, n) => {
+  if (n == 0) {
+    return d.charAt(0).toUpperCase();
+  } else {
+    return d.charAt(0).toUpperCase() + d.slice(1, n);
+  }
+};
+
+let dashedLine;
+
 const onClick = (d) => {
   div.transition()
-    .duration(200)
+    .duration(0)
     .style("opacity", 1);
-
   div.html(`
       <div class="data">
         <div class="day">${d.key.toUpperCase()}</div>
@@ -23,11 +33,20 @@ const onClick = (d) => {
     .style("left", (d3.event.pageX) + "px")
     .style("top", (d3.event.pageY - 28) + "px")
     .style('transform', 'translate(-47%,-90%)');
+  dashedLine = calorieSVGGroup.append('line')
+    .attr('class','dashed')
+    .attr('x1', x(d.key) +5)
+    .attr('y1', y(d3.max(data, (d) => d.value)))
+    .attr('x2', x(d.key) + 5)
+    .attr('y2', yAxis(d.value))
   d3.event.stopPropagation();
 };
 
 d3.select('body')
   .on('click', () => {
+    if(dashedLine){
+      d3.select('.dashed').remove();
+    }
     div.transition()
       .duration(0)
       .style("opacity", 0);
@@ -35,13 +54,13 @@ d3.select('body')
 
 
 const preData = {
-  monday: 2200,
-  tuesday: 1400,
-  wednesday: 2350,
-  thursday: 1700,
-  friday: 1900,
-  saturday: 1000,
-  sunday: 2400
+  monday: 500,
+  tuesday: 1000,
+  wednesday: 900,
+  thursday: 1400,
+  friday: 1100,
+  saturday: 1700,
+  sunday: 1200
 };
 
 const capitalize = (d) => {
@@ -93,75 +112,111 @@ const xAxisCall = d3.axisBottom(x);
 
 calorieSVGGroup.append('g')
   .attr('class', 'remove-axis')
-  .attr('transform', `translate(0,${height})`)
+  .attr('transform', `translate(-5,${height})`)
   .call(xAxisCall)
   .selectAll('text')
-  .attr('x', '8')
+  .attr('x', '0')
   .attr('y', '30')
-  .attr('text-anchor', 'end')
-  .style('color','#ffffff')
-  .style('font-size','20px')
+  .attr('text-anchor', 'middle')
+  .style('color', '#ffffff')
+  .style('font-size', '20px')
   .text((d) => {
-    if(d === 'monday'){
-      return 'M';
-    }else if(d === 'tuesday'){
-      return 'T';
-    }else if(d === 'wednesday'){
-      return 'W'
-    }else if(d === 'thursday'){
-      return 'T'
-    }else if(d === 'friday'){
-      return 'F'
-    }else if(d === 'saturday'){
-      return 'S'
-    }else {
-      return 'Sn'
+    if (!credit) {
+      if (d === 'sunday') {
+        return 'Sn'
+      } else {
+        return returnStringOf(d, 0)
+      }
+    } else {
+      return returnStringOf(d, 3);
     }
   });
 
 
 const yAxisCall = d3.axisLeft(yAxis)
-  .ticks(6)
+  .ticks(4)
   .tickFormat(d => {
-    if (d < 1000) {
-      return `${(d / 1000)}k`
-    }
-    return d3.format(".0s")(d)
+    return `${(d / 1000)}k`
   });
 
 calorieSVGGroup.append('g')
   .attr('class', 'remove-axis')
   .call(yAxisCall)
-  .attr('transform','translate(20,0)')
-  .style('font-size','20px')
-  .style('color','#ffffff');
+  .attr('transform', 'translate(20,0)')
+  .style('font-size', '20px')
+  .style('color', '#ffffff');
 
-const rectangles = calorieSVGGroup.selectAll('rect')
-  .data(data); // graph data elements
+// drop-shadow for line
+const filter = calorieSVGGroup.append('defs')
+  .append('filter')
+  .attr('id', 'drop-shadow')
+  .attr('filterUnits', 'userSpaceOnUse');
+
+filter.append('feGaussianBlur')
+  .attr('in', 'SourceAlpha')
+  .attr('stdDeviation', 10);
+
+filter.append('feOffset')
+  .attr('dx', 10)
+  .attr('dy', 10);
+
+const feComponentTransfer = filter.append('feComponentTransfer');
+feComponentTransfer
+  .append('feFuncA')
+  .attr('type', 'identity')
+  .attr('slope', 20);
+
+const feMerge = filter.append('feMerge');
+feMerge.append('feMergeNode');
+feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+// 7. d3's line generator
+const line = d3.line()
+  .x((d) => x(d.key)) // set the x values for the line generator
+  .y((d) => yAxis(d.value)) // set the y values for the line generator
+  .curve(d3.curveMonotoneX) // apply smoothing to the line
 
 
-rectangles.enter() // draw background for all values
+calorieSVGGroup.append("path")
+  .datum(data) // 10. Binds data to the line
+  .attr("class", "line") // Assign a class for styling
+  .attr("d", line) // 11. Calls the line generator
+  .attr('filter', 'url(#drop-shadow');
+
+const returnLastPoint =()=> {
+  const lastEl = data[data.length -1];
+  const maxY = yAxis(lastEl.value);
+  let maxX = x(lastEl.key) +5;
+  return {
+    maxX,
+    maxY
+  }
+};
+
+calorieSVGGroup.append('circle')
+  .attr('stroke','white')
+  .attr('stroke-width',4)
+  .attr('fill','transparent')
+  .attr('r',4)
+  .attr('cx',returnLastPoint().maxX)
+  .attr('cy',returnLastPoint().maxY);
+
+
+
+// tooltip enabling
+calorieSVGGroup.selectAll('rect')
+  .data(data)
+  .enter()
   .append('rect')
-  .attr('width', x.bandwidth())
-  .attr('height', y(d3.max(data, (d) => d.value)))
-  .attr('rx', rx)
-  .attr('ry', ry)
-  .attr('y', 0)
-  .attr('x', (d) => x(d.key))
-  .attr('fill', () => backgroundColor)
-  .on('click',onClick);
+  .attr('y', (d) => y(d3.max(data, (d) => d.value)) - y(d.value) - 25)
+  .attr('x', (d) => x(d.key) - 10)
+  .attr('width', 50)
+  .attr('height', 50)
+  .attr('opacity', 0)
+  .on('click', onClick);
 
 
-rectangles.enter() // draw bars according to value and scale
-  .append('rect')
-  .attr('width', x.bandwidth())
-  .attr('height', (d) => {
-    return y(d.value);
-  })
-  .attr('rx', rx)
-  .attr('ry', ry)
-  // tslint:disable-next-line:no-shadowed-variable
-  .attr('y', (d) => y(d3.max(data, (d) => d.value)) - y(d.value))
-  .attr('x', (d) => x(d.key))
-  .attr('fill', (d) => color(d.key))
-  .on('click',onClick);
+/**
+ * Remove bar chart group
+ */
+
